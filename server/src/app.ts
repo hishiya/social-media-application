@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
 import tweetRoutes from './routes/tweet';
+import userRoutes from './routes/user';
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/tweets', tweetRoutes);
-
+app.use('/api/users', userRoutes);
 app.get('/api/health', (_, res) => res.json({ status: 'ok' }));
 
 const PORT = process.env.PORT ?? 5000;
