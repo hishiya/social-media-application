@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
+import tweetRoutes from './routes/tweet';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/tweets', tweetRoutes);
 
 app.get('/api/health', (_, res) => res.json({ status: 'ok' }));
 
