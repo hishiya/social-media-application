@@ -1,34 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+
+const LoginPage = () => (
+    <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
+        <h1 className="text-2xl font-bold">Login Page</h1>
+    </div>
+)
+
+const RegisterPage = () => (
+    <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
+        <h1 className="text-2xl font-bold">Register Page</h1>
+    </div>
+)
+
+const FeedPage = () => (
+    <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
+        <h1 className="text-2xl font-bold">Feed Page</h1>
+    </div>
+)
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    // BrowserRouter — обгортає весь додаток, надає контекст роутингу
+        // Без нього Routes і Route не працюватимуть
+        <BrowserRouter>
+            <Routes>
+                {/* Route path="/" — що показати на головній сторінці */}
+                {/* Navigate to="/login" — одразу перенаправляє на /login */}
+                {/* replace — замінює поточний запис в history браузера замість додавання нового */}
+                {/* без replace кнопка "назад" в браузері поверне знову на / і знову редіректить */}
+                <Route path="/" element={<Navigate to="/login" replace />} />
+
+                {/* element — JSX який рендериться коли URL збігається з path */}
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/feed" element={<FeedPage />} />
+            </Routes>
+        </BrowserRouter>
   )
 }
 
