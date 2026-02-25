@@ -11,6 +11,7 @@ interface AuthState {
     user: User | null
 
     setAuth: (token: string, user: User) => void
+    setUser: (user: User) => void
     logout: () => void
 }
 
@@ -22,6 +23,9 @@ export const useAuthStore = create<AuthState>((set) => ({
         localStorage.setItem('token', token)
         set({ token, user })
     },
+
+    // Встановлює лише юзера — використовується при відновленні сесії після refresh
+    setUser: (user) => set({ user }),
 
     logout: () => {
         localStorage.removeItem('token')

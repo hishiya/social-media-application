@@ -1,0 +1,28 @@
+import axios from 'axios';
+
+const API_URL = 'http://localhost:5000/api';
+
+const authHeader = () => ({
+    headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+})
+
+export interface UserProfile {
+    _id: string;
+    username: string;
+    bio: string;
+    avatar: string;
+    followers: { _id: string; username: string; avatar: string }[];
+    following: { _id: string; username: string; avatar: string }[];
+    createdAt: string;
+}
+
+export const getProfile = async (username: string): Promise<UserProfile> => {
+    const response = await axios.get<{ user: UserProfile }>(`${API_URL}/users/${username}`)
+    return response.data.user;
+}
+
+export const followUser = async (userId: string): Promise<void> => {
+    await axios.post(`${API_URL}/users/${userId}/follow`, {}, authHeader());
+}

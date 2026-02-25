@@ -18,6 +18,10 @@ export const createTweet = async (req: Request, res: Response): Promise<void> =>
 
         await tweet.save();
 
+        // populate після save — замінює author (ObjectId) на реальний об'єкт юзера
+        // Так само як у getTweets, щоб TweetCard отримав { username, avatar }
+        await tweet.populate('author', 'username avatar');
+
         res.status(201).json({ tweet });
     } catch (error) {
         console.error('CREATE TWEET ERROR:', error);
@@ -86,6 +90,7 @@ export const likeTweet = async (req: Request, res: Response): Promise<void> => {
         }
 
         await tweet.save();
+        await tweet.populate('author', 'username avatar');
         res.status(200).json({ tweet });
     } catch (error) {
         console.error('LIKE TWEET ERROR:', error);
