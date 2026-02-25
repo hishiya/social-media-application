@@ -26,6 +26,11 @@ export const getTweets = async (): Promise<Tweet[]> => {
     return response.data.tweets;
 }
 
+export const getTweetsByUser = async (username: string): Promise<Tweet[]> => {
+    const response = await axios.get<{ tweets: Tweet[] }>(`${API_URL}/tweets/user/${username}`);
+    return response.data.tweets;
+}
+
 export const createTweet = async (text: string): Promise<Tweet> => {
     const response = await axios.post<{ tweet: Tweet}>(`${API_URL}/tweets`, { text }, authHeader());
     return response.data.tweet;

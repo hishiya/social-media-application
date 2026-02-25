@@ -1,5 +1,5 @@
 import { type Tweet, likeTweet, deleteTweet } from '../api/tweet';
-
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 
 interface TweetCardProps {
@@ -9,7 +9,9 @@ interface TweetCardProps {
 }
 
 const TweetCard = ({ tweet, onUpdate, onDelete }: TweetCardProps) => {
+
     const user = useAuthStore((state) => state.user);
+    const navigate = useNavigate();
     const isLiked = user ? tweet.likes.includes(user.id) : false;
     const isOwner = user?.id === tweet.author._id;
 
@@ -49,7 +51,12 @@ const TweetCard = ({ tweet, onUpdate, onDelete }: TweetCardProps) => {
 
                 {/* Ім'я автора та дата публікації */}
                 <div>
-                    <p className="font-semibold text-white">@{tweet.author.username}</p>
+                    <p
+                        className="font-semibold text-white hover:underline cursor-pointer"
+                        onClick={() => navigate(`/profile/${tweet.author.username}`)}
+                    >
+                        @{tweet.author.username}
+                    </p>
                     <p className="text-gray-500 text-sm">{formattedDate}</p>
                 </div>
             </div>

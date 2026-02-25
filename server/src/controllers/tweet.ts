@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Tweet from '../models/Tweet';
+import User from '../models/User';
 
 export const createTweet = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -41,6 +42,30 @@ export const getTweets = async (req: Request, res: Response): Promise<void> => {
             res.status(200).json({ tweets });
     } catch (error) {
         console.error('GET FEED ERROR:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+}
+
+export const getTweetsByUser = async (req: Request, res: Response): Promise<void> => {
+    try {
+        // Спочатку знаходимо юзера за username (який прийшов в URL як :username)
+        // Бо в Tweet зберігається ObjectId автора, а не username
+        const user = await User.findOne({ username: req.params.username });
+
+        if (!user) {
+            res.status(404).json({ message: 'User not found' });
+            return;
+        }
+
+        // Шукаємо тільки ті твіти, де author дорівнює _id знайденого юзера
+        const tweets = await Tweet
+            .find({ author: user._id })
+            .populate('author', 'username avatar')
+            .sort({ createdAt: -1 }); // найновіші першими
+
+        res.status(200).json({ tweets });
+    } catch (error) {
+        console.error('GET USER TWEETS ERROR:', error);
         res.status(500).json({ message: 'Server error' });
     }
 }
