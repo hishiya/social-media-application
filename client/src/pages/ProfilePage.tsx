@@ -5,6 +5,7 @@ import { getProfile, followUser, type UserProfile } from '../api/user';
 import { getTweetsByUser, type Tweet } from '../api/tweet';
 import { useAuthStore } from '../store/authStore';
 import TweetCard from '../components/TweetCard';
+import Navbar from '../components/Navbar';
 
 const ProfilePage = () => {
     const { username } = useParams<{ username: string }>();
@@ -81,10 +82,11 @@ const ProfilePage = () => {
 
     return (
         <div className="min-h-screen bg-gray-950 text-white">
+            <Navbar />
+            
 
-            {/* Шапка з кнопкою назад */}
-            <header className="border-b border-gray-800 px-4 py-3 flex items-center gap-4 sticky top-0 bg-gray-950 z-10">
-                {/* navigate(-1) — повертає на попередню сторінку в історії браузера */}
+            <main className="max-w-xl mx-auto px-4 py-6">
+
                 <button
                     onClick={() => navigate(-1)}
                     className="text-gray-400 hover:text-white transition-colors"
@@ -92,10 +94,6 @@ const ProfilePage = () => {
                     ← Назад
                 </button>
                 <h1 className="text-xl font-bold">@{profile.username}</h1>
-            </header>
-
-            <main className="max-w-xl mx-auto px-4 py-6">
-
                 {/* Блок з інформацією про юзера */}
                 <div className="mb-6">
 
