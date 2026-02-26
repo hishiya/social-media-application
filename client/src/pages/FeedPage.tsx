@@ -1,19 +1,13 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { type Tweet, getTweets, createTweet } from '../api/tweet';
 import TweetCard from '../components/TweetCard';
-import { useAuthStore } from '../store/authStore';
+import Navbar from '../components/Navbar';
 
 const FeedPage = () => {
     const [tweets, setTweets] = useState<Tweet[]>([]);
     const [text, setText] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
     const [submitting, setSubmitting] = useState<boolean>(false);
-
-    const user = useAuthStore((state) => state.user);
-    const logout = useAuthStore((state) => state.logout);
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchTweets = async () => {
@@ -54,31 +48,9 @@ const FeedPage = () => {
         setTweets(tweets.filter(t => t._id !== id));
     }
 
-    const handleLogout = () => {
-        logout();
-        navigate('/login');
-    }
-
     return (
         <div className="min-h-screen bg-gray-950 text-white">
-
-      {/* Шапка сайту */}
-      <header className="border-b border-gray-800 px-4 py-3 flex justify-between items-center sticky top-0 bg-gray-950 z-10">
-        {/* sticky top-0 — шапка залишається зверху при скролі */}
-        <h1 className="text-xl font-bold">Головна</h1>
-
-        <div className="flex items-center gap-4">
-          {/* Показуємо ім'я поточного юзера */}
-          <span className="text-gray-400 text-sm">@{user?.username}</span>
-
-          <button
-            onClick={handleLogout}
-            className="text-sm text-gray-400 hover:text-white transition-colors"
-          >
-            Вийти
-          </button>
-        </div>
-      </header>
+          <Navbar />
 
       {/* Основний контент — обмежуємо ширину по центру */}
       <main className="max-w-xl mx-auto px-4 py-4">
