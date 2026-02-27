@@ -109,6 +109,16 @@ const ProfilePage = () => {
                             }
                         </div>
 
+                        {/* Кнопку "Редагувати профіль" показуємо лише для власного профілю */}
+                        {isOwnProfile && (
+                            <button
+                                onClick={() => navigate('/profile/edit')}
+                                className="px-5 py-2 rounded-full font-semibold text-sm border border-gray-600 text-white hover:bg-gray-800 transition-colors"
+                            >
+                                Редагувати профіль
+                            </button>
+                        )}
+
                         {/* Кнопку Follow/Unfollow показуємо тільки якщо це НЕ наш профіль */}
                         {!isOwnProfile && (
                             <button

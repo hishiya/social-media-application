@@ -18,6 +18,22 @@ export interface UserProfile {
     createdAt: string;
 }
 
+export interface UpdateProfileData {
+    username?: string;
+    bio?: string;
+    avatar?: string;
+    currentPassword?: string;
+    newPassword?: string;
+}
+
+export interface UpdatedUser {
+    id: string;
+    username: string;
+    email: string;
+    bio: string;
+    avatar: string;
+}
+
 export const getProfile = async (username: string): Promise<UserProfile> => {
     const response = await axios.get<{ user: UserProfile }>(`${API_URL}/users/${username}`)
     return response.data.user;
@@ -25,4 +41,9 @@ export const getProfile = async (username: string): Promise<UserProfile> => {
 
 export const followUser = async (userId: string): Promise<void> => {
     await axios.post(`${API_URL}/users/${userId}/follow`, {}, authHeader());
+}
+
+export const updateProfile = async (data: UpdateProfileData): Promise<UpdatedUser> => {
+    const response = await axios.put<{ user: UpdatedUser }>(`${API_URL}/users/me`, data, authHeader());
+    return response.data.user;
 }

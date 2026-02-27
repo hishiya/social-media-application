@@ -7,6 +7,7 @@ import PrivateRoute from "./components/PrivateRoute"
 import FeedPage from "./pages/FeedPage"
 import { useAuthStore } from "./store/authStore"
 import ProfilePage from "./pages/ProfilePage"
+import EditProfilePage from "./pages/EditProfilePage"
 
 function App() {
   const { token, setUser, logout } = useAuthStore()
@@ -45,6 +46,7 @@ function App() {
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/feed" element={<PrivateRoute><FeedPage /></PrivateRoute>} />
                 <Route path="/profile/:username" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+                <Route path="/profile/edit" element={<PrivateRoute><EditProfilePage /></PrivateRoute>} />
             </Routes>
         </BrowserRouter>
   )
