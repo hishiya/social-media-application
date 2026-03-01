@@ -8,6 +8,7 @@ import FeedPage from "./pages/FeedPage"
 import { useAuthStore } from "./store/authStore"
 import ProfilePage from "./pages/ProfilePage"
 import EditProfilePage from "./pages/EditProfilePage"
+import SearchPage from "./pages/SearchPage"
 
 function App() {
   const { token, setUser, logout } = useAuthStore()
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/feed" element={<PrivateRoute><FeedPage /></PrivateRoute>} />
                 <Route path="/profile/:username" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
                 <Route path="/profile/edit" element={<PrivateRoute><EditProfilePage /></PrivateRoute>} />
+                <Route path="/search" element={<PrivateRoute><SearchPage /></PrivateRoute>} />
             </Routes>
         </BrowserRouter>
   )

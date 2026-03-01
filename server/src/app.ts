@@ -7,6 +7,7 @@ import authRoutes from './routes/auth';
 import tweetRoutes from './routes/tweet';
 import userRoutes from './routes/user';
 import replyRoutes from './routes/reply';
+import searchRoutes from './routes/search';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/tweets', tweetRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/replies', replyRoutes);
+app.use('/api/search', searchRoutes);
 app.get('/api/health', (_, res) => res.json({ status: 'ok' }));
 
 const PORT = process.env.PORT ?? 5000;
