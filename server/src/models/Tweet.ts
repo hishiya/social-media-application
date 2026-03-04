@@ -4,7 +4,10 @@ export interface ITweet extends Document {
     text: string;
     author: mongoose.Types.ObjectId;
     likes: mongoose.Types.ObjectId[];
+    media: string[];
+    isEdited: boolean;
     createdAt: Date;
+    updatedAt: Date;
 }
 
 const TweetSchema: Schema<ITweet> = new Schema(
@@ -26,6 +29,14 @@ const TweetSchema: Schema<ITweet> = new Schema(
                 ref: 'User',
             }
         ],
+        media: {
+            type: [String],
+            default: [], // Масив URL медіа, може бути порожнім
+        },
+        isEdited: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         timestamps: true,

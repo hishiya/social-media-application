@@ -11,7 +11,10 @@ export interface Tweet {
         avatar: string;
     };
     likes: string[];
+    media: string[];
+    isEdited: boolean;
     createdAt: string;
+    updatedAt: string;
 }
 
 const authHeader = () => ({
@@ -31,8 +34,8 @@ export const getTweetsByUser = async (username: string): Promise<Tweet[]> => {
     return response.data.tweets;
 }
 
-export const createTweet = async (text: string): Promise<Tweet> => {
-    const response = await axios.post<{ tweet: Tweet}>(`${API_URL}/tweets`, { text }, authHeader());
+export const createTweet = async (text: string, media: string[] = []): Promise<Tweet> => {
+    const response = await axios.post<{ tweet: Tweet}>(`${API_URL}/tweets`, { text, media }, authHeader());
     return response.data.tweet;
 }
 
@@ -43,4 +46,29 @@ export const likeTweet = async (tweetId: string): Promise<Tweet> => {
 
 export const deleteTweet = async (tweetId: string): Promise<void> => {
     await axios.delete(`${API_URL}/tweets/${tweetId}`, authHeader());
+}
+
+export const editTweet = async (tweetId: string, text: string): Promise<Tweet> => {
+    const response = await axios.patch<{ tweet: Tweet }>(
+        `${API_URL}/tweets/${tweetId}`,
+        { text },
+        authHeader()
+    )
+    return response.data.tweet;
+}
+
+export const uploadMedia = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('file', file)
+
+    const response = await axios.post<{ url: string }>(
+        `${API_URL}/upload`,
+        formData,
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            }
+        }
+    )
+    return response.data.url;   
 }

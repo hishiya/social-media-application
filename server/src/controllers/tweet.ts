@@ -4,17 +4,20 @@ import User from '../models/User';
 
 export const createTweet = async (req: Request, res: Response): Promise<void> => {
     try {
-        // req.body.text — текст твіту який клієнт надіслав в тілі POST запиту
-        const { text } = req.body;
+        // Текст твіту та медіа які користувач хоче додати, приходять в тілі запиту
+        const { text, media } = req.body;
 
         if (!text || !text.trim()) {
             res.status(400).json({ message: 'Text is required' });
             return;
         }
 
+        const mediaUrls: string[] = Array.isArray(media) ? media : [];
+
         const tweet = new Tweet({
             text,
             author: req.userId,
+            media: mediaUrls,
         })
 
         await tweet.save();
@@ -119,6 +122,40 @@ export const likeTweet = async (req: Request, res: Response): Promise<void> => {
         res.status(200).json({ tweet });
     } catch (error) {
         console.error('LIKE TWEET ERROR:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+}
+
+export const editTweet = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const tweet = await Tweet.findById(req.params.id);
+
+        if (!tweet) {
+            res.status(404).json({ message: 'Tweet not found' });
+            return;
+        }
+
+        // Перевіряємо, що автор твіту — це той, хто робить запит (req.userId)
+        if (tweet.author.toString() !== req.userId) {
+            res.status(403).json({ message: 'Not authorized' });
+            return;
+        }
+
+        const { text } = req.body;
+
+        if (!text || !text.trim()) {
+            res.status(400).json({ message: 'Text is required' }); 
+            return;
+        }
+
+        tweet.text = text.trim();
+        tweet.isEdited = true; 
+
+        await tweet.save();
+        await tweet.populate('author', 'username avatar');
+        res.status(200).json({ tweet });
+    } catch (error) {
+        console.error('EDIT TWEET ERROR:', error);
         res.status(500).json({ message: 'Server error' });
     }
 }
