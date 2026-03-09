@@ -12,6 +12,7 @@ import { type Tweet, getTweets, createTweet, uploadMedia } from '../api/tweet';
 // Імпортуємо компоненти
 import TweetCard from '../components/TweetCard';
 import Navbar from '../components/Navbar';
+import { usePageTitle } from '../hooks/usePageTitle';
 
 const FeedPage = () => {
     // ── Стани для списку твітів ──
@@ -32,6 +33,8 @@ const FeedPage = () => {
     // - (null)         → початкове значення до монтування компонента
     // Потрібен щоб програмно викликати click() на прихованому input[type=file]
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    usePageTitle("Main");
 
     // useEffect виконується після першого рендеру компонента
     // [] — масив залежностей порожній → ефект спрацьовує ОДИН РАЗ при монтуванні

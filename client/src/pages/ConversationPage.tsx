@@ -9,6 +9,7 @@ import { getMessages, deleteMessage } from '../api/chat';
 import socket from '../socket';
 
 import Navbar from '../components/Navbar';
+import { usePageTitle } from '../hooks/usePageTitle';
 
 const ConversationPage: React.FC = () => {
     const { conversationId } = useParams<{ conversationId: string }>();
@@ -25,6 +26,8 @@ const ConversationPage: React.FC = () => {
     const [inputText, setInputText] = useState<string>('');
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    usePageTitle("Conversation");
 
     useEffect(() => {
         // Якщо немає токена або ID розмови — нічого не робимо

@@ -7,6 +7,7 @@ import { getOrCreateConversation } from '../api/chat';
 import { useAuthStore } from '../store/authStore';
 import TweetCard from '../components/TweetCard';
 import Navbar from '../components/Navbar';
+import { usePageTitle } from '../hooks/usePageTitle';
 
 const ProfilePage = () => {
     const { username } = useParams<{ username: string }>();
@@ -18,6 +19,8 @@ const ProfilePage = () => {
     const user = useAuthStore((state) => state.user);
     const token = useAuthStore((state) => state.token);
     const navigate = useNavigate();
+
+    usePageTitle("Profile");
 
     const isOwnProfile = user?.username === username;
 

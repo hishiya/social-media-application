@@ -23,7 +23,7 @@ const Navbar = () => {
                 onClick={() => navigate('/feed')}
                 className="text-xl font-bold cursor-pointer hover:text-blue-400 transition-colors"
             >
-                Twitter
+                Liber
             </span>
 
             {/* Права частина — ім'я юзера і кнопка виходу */}

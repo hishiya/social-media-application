@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { register } from "../api/auth";
 import { useAuthStore } from "../store/authStore";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const RegisterPage = () => {
     const [username, setUsername] = useState<string>('')
@@ -12,6 +13,8 @@ const RegisterPage = () => {
 
     const navigate = useNavigate()
     const setAuth = useAuthStore((state) => state.setAuth)
+
+    usePageTitle("Register");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()

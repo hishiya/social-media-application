@@ -11,6 +11,7 @@ import EditProfilePage from "./pages/EditProfilePage"
 import SearchPage from "./pages/SearchPage"
 import ChatPage from "./pages/ChatPage"
 import ConversationPage from "./pages/ConversationPage"
+import { NotFoundPage } from "./pages/NotFoundPage"
 
 function App() {
   const { token, setUser, logout } = useAuthStore()
@@ -53,6 +54,7 @@ function App() {
                 <Route path="/search" element={<PrivateRoute><SearchPage /></PrivateRoute>} />
                 <Route path="/chat" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
                 <Route path="/chat/:conversationId" element={<PrivateRoute><ConversationPage /></PrivateRoute>} />
+                <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </BrowserRouter>
   )

@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { search, type SearchUser, type SearchTweet } from "../api/search";
 import { useAuthStore } from "../store/authStore";
 import Navbar from "../components/Navbar";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const SearchPage = () => {
     const navigate = useNavigate();
@@ -18,6 +19,8 @@ const SearchPage = () => {
     const [error, setError] = useState('');
 
     const user = useAuthStore((state) => state.user);
+
+    usePageTitle("Search");
 
     useEffect(() => {
         const q = searchParams.get('q');

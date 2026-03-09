@@ -12,6 +12,7 @@ import { updateProfile, getProfile } from '../api/user';
 import { uploadMedia } from '../api/tweet';
 import { useAuthStore } from '../store/authStore';
 import Navbar from '../components/Navbar';
+import { usePageTitle } from '../hooks/usePageTitle';
 
 const EditProfilePage = () => {
     const navigate = useNavigate();
@@ -40,6 +41,8 @@ const EditProfilePage = () => {
     // useRef для прихованого <input type="file"> аватарки
     // HTMLInputElement — TypeScript знає що .current — це <input>-елемент
     const avatarInputRef = useRef<HTMLInputElement>(null);
+
+    usePageTitle("Edit");
 
     // ── Підвантаження поточних даних профілю при монтуванні ──
     useEffect(() => {

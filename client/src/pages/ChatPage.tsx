@@ -5,6 +5,7 @@ import { useAuthStore } from '../store/authStore';
 import { useChatStore } from '../store/chatStore';
 import { getConversations } from '../api/chat';
 import Navbar from '../components/Navbar';
+import { usePageTitle } from '../hooks/usePageTitle';
 
 const ChatPage: React.FC = () => {
     const navigate = useNavigate();
@@ -16,6 +17,8 @@ const ChatPage: React.FC = () => {
     const setConversations = useChatStore((state) => state.setConversations);
     const isLoading = useChatStore((state) => state.isLoading)
     const setLoading = useChatStore((state) => state.setLoading);
+
+    usePageTitle("Chat");
 
     useEffect(() => {
         if (!token) return;
