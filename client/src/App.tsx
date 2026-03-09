@@ -9,6 +9,8 @@ import { useAuthStore } from "./store/authStore"
 import ProfilePage from "./pages/ProfilePage"
 import EditProfilePage from "./pages/EditProfilePage"
 import SearchPage from "./pages/SearchPage"
+import ChatPage from "./pages/ChatPage"
+import ConversationPage from "./pages/ConversationPage"
 
 function App() {
   const { token, setUser, logout } = useAuthStore()
@@ -49,6 +51,8 @@ function App() {
                 <Route path="/profile/:username" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
                 <Route path="/profile/edit" element={<PrivateRoute><EditProfilePage /></PrivateRoute>} />
                 <Route path="/search" element={<PrivateRoute><SearchPage /></PrivateRoute>} />
+                <Route path="/chat" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
+                <Route path="/chat/:conversationId" element={<PrivateRoute><ConversationPage /></PrivateRoute>} />
             </Routes>
         </BrowserRouter>
   )

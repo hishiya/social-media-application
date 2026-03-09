@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProfile, followUser, type UserProfile } from '../api/user';
 import { getTweetsByUser, type Tweet } from '../api/tweet';
+import { getOrCreateConversation } from '../api/chat';
 import { useAuthStore } from '../store/authStore';
 import TweetCard from '../components/TweetCard';
 import Navbar from '../components/Navbar';
@@ -15,6 +16,7 @@ const ProfilePage = () => {
     const [followLoading, setFollowLoading] = useState<boolean>(false);
 
     const user = useAuthStore((state) => state.user);
+    const token = useAuthStore((state) => state.token);
     const navigate = useNavigate();
 
     const isOwnProfile = user?.username === username;
@@ -56,6 +58,17 @@ const ProfilePage = () => {
         }
     }
 
+    const handleStartChat = async () => {
+        if (!token || !profile) return;
+
+        try {
+            const conversation = await getOrCreateConversation(token, profile._id);
+            navigate(`/chat/${conversation._id}`);
+        } catch (error) {
+            console.error('Failed to start chat:', error);
+        }
+    }
+
     const handleUpdate = (updated: Tweet) => {
         setTweets(tweets.map(t => (t._id === updated._id ? updated : t)));
     }
@@ -83,7 +96,7 @@ const ProfilePage = () => {
     return (
         <div className="min-h-screen bg-gray-950 text-white">
             <Navbar />
-            
+
 
             <main className="max-w-xl mx-auto px-4 py-6">
 
@@ -121,20 +134,28 @@ const ProfilePage = () => {
 
                         {/* Кнопку Follow/Unfollow показуємо тільки якщо це НЕ наш профіль */}
                         {!isOwnProfile && (
-                            <button
-                                onClick={handleFollow}
-                                disabled={followLoading}
-                                className={`px-5 py-2 rounded-full font-semibold text-sm transition-colors disabled:opacity-50 ${
-                                    isFollowing
-                                        // Якщо вже підписаний — сіра кнопка "Відписатись"
-                                        ? 'border border-gray-600 text-white hover:border-red-500 hover:text-red-400'
-                                        // Якщо не підписаний — біла кнопка "Підписатись"
-                                        : 'bg-white text-black hover:bg-gray-200'
-                                }`}
-                            >
-                                {/* Показуємо "..." під час запиту, інакше текст залежно від стану */}
-                                {followLoading ? '...' : isFollowing ? 'Відписатись' : 'Підписатись'}
-                            </button>
+                            <div className="flex gap-2">
+
+                                {/* Кнопка "Написати" — відкриває чат */}
+                                <button
+                                    onClick={handleStartChat}
+                                    className="px-5 py-2 rounded-full font-semibold text-sm border border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white transition-colors"
+                                >
+                                    Написати
+                                </button>
+
+                                {/* Існуюча кнопка Follow/Unfollow — без змін */}
+                                <button
+                                    onClick={handleFollow}
+                                    disabled={followLoading}
+                                    className={`px-5 py-2 rounded-full font-semibold text-sm transition-colors disabled:opacity-50 ${isFollowing
+                                            ? 'border border-gray-600 text-white hover:border-red-500 hover:text-red-400'
+                                            : 'bg-white text-black hover:bg-gray-200'
+                                        }`}
+                                >
+                                    {followLoading ? '...' : isFollowing ? 'Відписатись' : 'Підписатись'}
+                                </button>
+                            </div>
                         )}
                     </div>
 

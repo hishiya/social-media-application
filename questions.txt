@@ -1,0 +1,186 @@
+export const uploadMedia = async (file: File): Promise<string> => {
+    // FormData — вбудований браузерний клас для надсилання файлів
+    // Це не JSON, а multipart/form-data — спеціальний формат для файлів
+    const formData = new FormData();
+
+    // formData.append('field', value) — додаємо поле до форми
+    // 'file' — ім'я поля (має співпадати з upload.single('file') на сервері!)
+    // file — сам файл типу File (об'єкт браузера)
+    formData.append('file', file);
+
+    const response = await axios.post<{ url: string }>(
+        `${API_URL}/upload`, // наш новий ендпоінт
+        formData,             // надсилаємо FormData (не JSON)
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                // Content-Type НЕ вказуємо — axios виставить його автоматично
+                // для FormData він має бути 'multipart/form-data; boundary=...'
+                // і axios сам генерує коректний boundary
+            },
+        }
+    );
+
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+
+
+    const file = e.target.files?.[0];
+
+    catch (err: unknown) {
+            // Дістаємо повідомлення помилки з axios response
+            // TypeScript не знає тип err, тому перевіряємо структуру вручну
+            const message =
+                err && typeof err === 'object' && 'response' in err
+                    ? (err as { response?: { data?: { message?: string } } }).response?.data?.message
+                    : undefined;
+            setError(message ?? 'Помилка при оновленні профілю');
+        } finally {
+            setLoading(false);
+        }
+
+    
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    formData.append('file', file);
+    const avatarInputRef = useRef<HTMLInputElement>(null);
+    if (avatarInputRef.current) avatarInputRef.current.value = '';
+
+НОВЕ
+    export interface IConversation extends Document 
+    Schema<IConversation>
+    mongoose.Types.ObjectId[];
+
+    conversation: {
+            type: mongoose.Types.ObjectId, // тип поля
+            ref: 'Conversation',           // посилання на модель Conversation
+            required: true,                // обов'язкове поле
+        },
+
+    const page = Number(req.query.page) || 1;
+
+
+
+
+
+
+
+
+    import { Server } from 'socket.io';
+
+// Socket.io працює поверх HTTP сервера, тому спочатку створюємо HTTP сервер
+import http from 'http';
+
+import Message from './models/Message';
+import Conversation from './models/Conversation';
+
+import { verifyToken } from './utils/token';
+
+export const initSocket = (httpServer: http.Server) => {
+    const io = new Server(httpServer, {
+        cors: {
+            origin: 'http://localhost:5173',
+            methods: ['GET', 'POST'],
+        }
+    })
+
+    io.use((socket, next) => {
+        const token = socket.handshake.auth.token as string;
+
+        if (!token) {
+            return next(new Error('Authentication error: No token provided'));
+        }
+
+        const payload = verifyToken(token);
+
+        if (!payload) {
+            return next(new Error('Authentication error: Invalid token'));
+        }
+
+        // Зберігаємо userId в даних сокета для подальшого використання
+        socket.data.userId = payload.userId;
+        next();
+    })
+
+    io.on('connection', (socket) => {
+        console.log(`User connected: ${socket.data.userId}, socketId: ${socket.id}`);
+
+        socket.on('join_conversation', async ({ conversationId }: { conversationId: string }) => {
+            const conversation = await Conversation.findOne({
+                _id: conversationId,
+                participants: socket.data.userId,
+            })
+
+            if (!conversation) {
+                socket.emit('error', { message: 'Access denied to this conversation' });
+                return;
+            }
+
+            socket.join(conversationId);
+            console.log(`User ${socket.data.userId} joined conversation ${conversationId}`);
+        })
+
+        socket.on('send_message', async ({ conversationId, text }: { conversationId: string, text: string }) => {
+            if (!text || text.trim()) return;
+
+            if (text.trim().length > 2000) return;
+
+            const conversation = await Conversation.findOne({
+                _id: conversationId,
+                participants: socket.data.userId,
+            })
+
+            if (!conversation) {
+                socket.emit('error', { message: 'Access denied to this conversation' });
+                return;
+            }
+
+            const message = new Message({
+                conversation: conversationId,
+                sender: socket.data.userId,
+                text: text.trim(),
+            })
+
+            await message.save();
+
+            await Conversation.findByIdAndUpdate(conversationId, { updatedAt: new Date() });
+            await message.populate('sender', 'username avatar _id');
+
+            io.to(conversationId).emit('new_message', message.toObject());
+
+            console.log(`Message saved and broadcast in room ${conversationId}`)
+        })
+
+        socket.on('disconnect', () => {
+            console.log(`User disconnected: ${socket.data.userId}`);
+        })
+    })
+
+    return io;
+}
+
+
+Навіщо ставити порожні         {}, в файлі chat.ts getOrCreateConversation 
+
+transports: ['websocket'],
+
+const getOtherParticipant = (conversation: (typeof conversations)[0]) 
+
+
+
+
+8. transports: ['websocket']
+Socket.IO за замовчуванням спочатку використовує HTTP polling (клієнт кожні 25мс питає "є новини?"), а потім оновлює з'єднання до WebSocket (постійне з'єднання).
+
+transports: ['websocket'] — пропускаємо polling, одразу WebSocket. Це:
+
+Швидше (немає зайвих HTTP-запитів)
+Менше навантаження на сервер
+Підходить коли ми точно знаємо що сервер підтримує WebSocket
+
+return io
+Повертаємо io з функції на випадок якщо в app.ts або іншому місці знадобиться io для додаткової логіки (наприклад, надіслати сповіщення не в чаті). Зараз не використовуємо але хороша практика.
+Як саме нам може знадобитись return io? 
+
+app.use(express.json()); 
+Що саме робить express.json під капотом. Наведи приклад 

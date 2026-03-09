@@ -4,7 +4,10 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
 import path from 'path';
+import http from 'http';
+import { initSocket } from './socket';
 
+import chatRoutes from './routes/chat';
 import authRoutes from './routes/auth';
 import tweetRoutes from './routes/tweet';
 import userRoutes from './routes/user';
@@ -42,6 +45,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/replies', replyRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/chat', chatRoutes);
 
 app.get('/api/health', (_, res) => res.json({ status: 'ok' }));
 
@@ -50,9 +54,18 @@ const MONGO_URI = process.env.MONGO_URI;
 
 if (!MONGO_URI) throw new Error('MONGO_URI is not defined in .env');
 
+// Створюємо HTTP сервер вручну, щоб потім передати його в Socket.io
+const httpServer = http.createServer(app);
+
+// Ініціалізуємо Socket.io, передаючи йому HTTP сервер
+const io = initSocket(httpServer);
+
+// Зберігаємо io в app, щоб мати доступ до нього в контролерах
+app.set('io', io);
+
 mongoose
   .connect(MONGO_URI)
-  .then(() => app.listen(PORT, () => console.log(`Server running on port http://localhost:${PORT}`)))
+  .then(() => httpServer.listen(PORT, () => console.log(`Server running on port http://localhost:${PORT}`)))
   .catch((err) => {
     console.error('Startup error:', err);
     process.exit(1);

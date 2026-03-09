@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 
+import socket from "../socket";
+
 const Navbar = () => {
     const navigate = useNavigate()
 
@@ -8,6 +10,7 @@ const Navbar = () => {
     const logout = useAuthStore((state) => state.logout)
 
     const handleLogout = () => {
+        socket.disconnect() // відключаємо сокет при виході
         logout()
         navigate("/login")
     }
@@ -45,6 +48,30 @@ const Navbar = () => {
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607z"
+                        />
+                    </svg>
+                </button>
+
+                {/* Кнопка переходу до чату */}
+                <button
+                    onClick={() => navigate('/chat')}
+                    className="text-gray-400 hover:text-white transition-colors"
+                    title="Повідомлення"
+                >
+                    {/* SVG іконка чат-бульбашки */}
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                        stroke="currentColor"
+                        className="w-5 h-5"
+                    >
+                        {/* Шлях іконки "chat bubble" */}
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
                         />
                     </svg>
                 </button>
